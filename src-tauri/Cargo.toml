@@ -1,0 +1,41 @@
+[package]
+name = "app"
+version = "0.1.0"
+description = ""
+authors = [""]
+license = ""
+repository = ""
+default-run = "app"
+edition = "2021"
+rust-version = "1.63"
+
+[build-dependencies]
+tauri-build = { version = "1", features = ["config-toml"] }
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+## -- Serde/Json
+serde_json = "1"
+serde = { version = "1", features = ["derive"] }
+serde_with_macros = "2"
+## -- Tauri & SurrealDB
+tauri = { version = "1", features = [] }
+# For dev and to easy first time build experience, just have memory surrealdb for  now.
+# Remove `default-feature=false, features = ...` to enable persistent storage.
+surrealdb = {version = "1.0.0-beta.9", default-features=false, features = ['kv-mem'] }
+## -- Others
+parking_lot = "0.12"
+modql = "0.2.0"
+# NOTE: , features = ["format"] would be nice, but it is very heavy, and sometime have compiles issues with swc_ components
+ts-rs = { version = "6" }
+
+[dev-dependencies]
+anyhow = "1"
+
+[features]
+# by default Tauri runs in production mode
+# when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
+default = [ "custom-protocol" ]
+# this feature is used used for production builds where `devPath` points to the filesystem
+# DO NOT remove this
+custom-protocol = [ "tauri/custom-protocol" ]
